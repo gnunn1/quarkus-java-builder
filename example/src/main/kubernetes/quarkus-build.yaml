@@ -1,0 +1,44 @@
+apiVersion: build.knative.dev/v1alpha1
+kind: Build
+metadata:
+  name: ${project.artifactId}-build
+  labels:
+    app: ${project.artifactId}
+    type: build
+spec:
+  serviceAccountName: build-bot
+  source:
+    git:
+      revision: "${git.source.revision}"
+      url: "${git.source.repo.url}"
+  steps:
+    - args:
+        - "/usr/local/bin/buildah.sh"
+      env:
+        - name: WORK_DIR
+          value: /workspace/${app.context.dir}
+        - name: DESTINATION_NAME
+          value: ${app.container.image}
+        # disables pushing of the $DESTINATION_NAME to container registry
+        - name: PUSH
+          value: "false"
+      image: quay.io/rhdevelopers/quarkus-java-builder
+      name: build-and-push
+      # needed for buildah builds to be running as containers
+      securityContext:
+        capabilities:
+          add: ["SYS_ADMIN"]
+      volumeMounts:
+        - mountPath: /root/.m2
+          name: m2-cache
+        - mountPath: /var/lib/containers
+          name: container-storage
+      workingDir: /workspace/${app.context.dir}
+  timeout: 60m
+  volumes:
+    - name: m2-cache
+      persistentVolumeClaim:
+        claimName: m2-cache
+    - name: container-storage
+      hostPath:
+        path: /var/lib/containers

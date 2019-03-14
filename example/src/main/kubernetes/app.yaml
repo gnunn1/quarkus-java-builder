@@ -1,0 +1,48 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: ${project.artifactId}
+spec:
+  selector:
+    app: ${project.artifactId}
+  ports:
+    - port: 8080
+      targetPort: 8080
+  type: NodePort
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ${project.artifactId}
+spec:
+  selector:
+    matchLabels:
+      app: ${project.artifactId}
+  template:
+    metadata:
+      labels:
+        app: ${project.artifactId}
+    spec:
+      containers:
+        - name: ${project.artifactId}
+          image: ${app.container.image}
+          imagePullPolicy: IfNotPresent
+          resources:
+            limits:
+              memory: "64Mi"
+              cpu: "10m"
+          ports:
+            - name: http-web
+              containerPort: 8080
+          livenessProbe:
+            httpGet:
+              port: 8080
+              path: /
+      initContainers:
+        - name: build-status-checker
+          image: quay.io/rhdevelopers/build-status-checker
+          imagePullPolicy: IfNotPresent
+          env:
+            - name: BUILD_NAME
+              value: ${project.artifactId}
+      serviceAccountName: build-bot

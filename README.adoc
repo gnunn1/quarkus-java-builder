@@ -111,6 +111,7 @@ mvn -Dcontainer.registry.url='https://index.docker.io' \#<1>
     -Dgit.source.revision='master' \#<4>
     -Dgit.source.repo.url='https://github.com/kameshsampath/knative-tutorial-greeter.git' \#<5>
     -Dapp.container.image='docker.io/demo/quarkus-greeter' \#<6>
+    -Dapp.context.dir='java/quarkus' \#<7>
     clean package
 ----
 
@@ -120,6 +121,7 @@ mvn -Dcontainer.registry.url='https://index.docker.io' \#<1>
 <4> The Git source revision 
 <5> The Git source repository url
 <6> The application container image name, maps to `DESTINATION_NAME` in <<en-vars>>
+<7> The context directory within the sources that will be built
 
 
 [source,bash]

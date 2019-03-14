@@ -5,7 +5,9 @@
 # MVN_CMD_ARGS - the maven command arguments e.g. clean install
 # build image will deployed e.g. quay.io/myrepo/app:1.0
 
-set -xeu
+set -eu
+
+PUSH=${PUSH:-'true'}
 
 cd $WORK_DIR
 
@@ -13,7 +15,7 @@ cd $WORK_DIR
 mvn ${MVN_CMD_ARGS:-clean -DskipTests install -Pnative}
 
 # define the container base image
-containerID=$(buildah from registry.access.redhat.com/ubi7-dev-preview/ubi-minimal)
+containerID=$(buildah from registry.fedoraproject.org/fedora-minimal)
 
 # mount the container root FS
 appFS=$(buildah mount $containerID)
@@ -26,12 +28,23 @@ cp target/*-runner  $appFS/deployment/application
 chmod +x $appFS/deployment/application
 
 # Add entry  point for the application
-buildah config --entrypoint /deployment/application $containerID
-buildah config --cmd "['-Dquarkus.http.host=0.0.0.0']" $containerID
+buildah config --entrypoint '["/deployment/application"]'  $containerID
+buildah config --cmd "\-Dquarkus.http.host=0.0.0.0" $containerID
+
+buildah config --author "devx@redhat.com" --created-by "devx@redhat.com" --label Built-By=buildah $containerID
 
 IMAGEID=$(buildah commit $containerID $DESTINATION_NAME)
 
 echo "Succesfully committed $DESTINATION_NAME with image id $IMAGEID"
 
 # Push the image to regisry 
-buildah push --tls-verify=false $IMAGEID $DESTINATION_NAME
+echo "To push ? $PUSH"
+
+if [ "$PUSH" = "false" ];
+then
+  echo "Pushing $DESTINATION_NAME to local storage"
+  buildah push $IMAGEID oci:/var/lib/containers/storage:$DESTINATION_NAME
+else  
+  echo "Pushing $DESTINATION_NAME to remote container repository"
+  buildah push --tls-verify=false $IMAGEID $DESTINATION_NAME
+fi 

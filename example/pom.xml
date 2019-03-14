@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>com.redhat.developer.demos</groupId>
+  <artifactId>quarkus-greeter</artifactId>
+  <version>1.0-SNAPSHOT</version>
+  <name>Quarkus Greeter</name>
+  <description>An example to show how to build and deploy an example quarkus app in kubernetes</description>
+  <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <maven.compiler.source>1.8</maven.compiler.source>
+    <maven.compiler.target>1.8</maven.compiler.target>
+    <build-helper-maven-plugin.version>3.0.0</build-helper-maven-plugin.version>
+    <git.source.repo.url>https://github.com/kameshsampath/knative-tutorial-greeter.git</git.source.repo.url>
+    <git.source.revision>master</git.source.revision>
+  </properties>
+  <build>
+    <finalName>${project.artifactId}</finalName>
+    <defaultGoal>clean process-resources</defaultGoal>
+    <plugins>
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>build-helper-maven-plugin</artifactId>
+        <version>${build-helper-maven-plugin.version}</version>
+        <executions>
+          <execution>
+            <id>add-resource</id>
+            <phase>generate-resources</phase>
+            <goals>
+              <goal>add-resource</goal>
+            </goals>
+            <configuration>
+              <resources>
+                <resource>
+                  <directory>${project.basedir}/src/main/kubernetes</directory>
+                  <targetPath>${project.build.directory}/kubernetes</targetPath>
+                  <filtering>true</filtering>
+                </resource>
+              </resources>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
+</project>
