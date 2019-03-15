@@ -86,7 +86,7 @@ https://kubernetes.io/docs/setup/minikube/[Minikube] is single node Kubernetes c
 
 As of now we dont have a standard way to build and deploy Kubernetes applications from sources. For the sake of demoing this builder we will will use https://github.com/knative/build[Knative Build], the following command will start minikube locally and setup Knative build in it.
 
-==== Deploy Knative Build  
+==== Vanilla Kubernetes Deployment using Knative Build  
 
 [source,bash]
 ----
@@ -105,6 +105,7 @@ Before the knative resources are deployed, we need to run the following maven co
 [source,bash]
 ----
 # This will generate the needed knative resources in target/knative directory
+
 mvn -Dcontainer.registry.url='https://index.docker.io' \#<1>
     -Dcontainer.registry.user='demo' \#<2>
     -Dcontainer.registry.password='password!' \#<3>
@@ -119,7 +120,7 @@ mvn -Dcontainer.registry.url='https://index.docker.io' \#<1>
 <2> The docker hub user name
 <3> The docker hub user password
 <4> The Git source revision 
-<5> The Git source repository url
+<5> The Git source repository url, this repo already has a quarkus app
 <6> The application container image name, maps to `DESTINATION_NAME` in <<en-vars>>
 <7> The context directory within the sources that will be built
 
@@ -127,10 +128,15 @@ mvn -Dcontainer.registry.url='https://index.docker.io' \#<1>
 [source,bash]
 ----
 # apply the resources 
-kubectl apply -f target/knative # <1>
+kubectl apply -f target/k8s #<1>
 ----
 
-This will create all the needed Knative resources that will run the Knative build for building the Quarkus application.
+<1> This will create the following kubernetes resources:
+
+- A Kubernetes Service Account called `build-bot` that holds container registry push secrets and get events from Knative Builds
+- build-watcher role and role binding 
+- A maven pvc that can cache maven artifacts after first build, for subsequent faster builds
+- A Deployment and a Service that uses the built image
 
 [NOTE]
 ====
@@ -143,9 +149,6 @@ Watch the status of the application using and use CTRL + C when you want to term
 kubectl get pods -w 
 ----
 ====
-
-=== Kubernetes Deployment
-**TODO**
 
 === Docker for Mac
 **TODO**

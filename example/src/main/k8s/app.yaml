@@ -26,10 +26,11 @@ spec:
       containers:
         - name: ${project.artifactId}
           image: ${app.container.image}
+          # this is needed if you wish to pull the image from local dummy registry e.g. dev.local/myrepo/myapp
           imagePullPolicy: IfNotPresent
           resources:
             limits:
-              memory: "64Mi"
+              memory: "32Mi"
               cpu: "10m"
           ports:
             - name: http-web
@@ -41,8 +42,7 @@ spec:
       initContainers:
         - name: build-status-checker
           image: quay.io/rhdevelopers/build-status-checker
-          imagePullPolicy: IfNotPresent
-          env:
-            - name: BUILD_NAME
-              value: ${project.artifactId}
+          args:
+            - poll
+            - --buildname=${project.artifactId}-build
       serviceAccountName: build-bot
