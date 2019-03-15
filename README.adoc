@@ -142,7 +142,7 @@ kubectl apply -f target/k8s #<1>
 ====
 * Build and deploy will take time at least for the first build as it warms the .m2 cache and downloads the base images
 
-Watch the status of the application using and use CTRL + C when you want to terminate the watch
+Watch the status of the application using and use CTRL + C when you want to terminate the watch.
 
 [source,bash]
 ----
@@ -150,5 +150,4 @@ kubectl get pods -w
 ----
 ====
 
-=== Docker for Mac
-**TODO**
+Once the build is successfully completed you should see the deployment `quarkus-greeter` coming up in few mins, once you see the quarkus-greeter application running you can call it via `curl -v  $(minikube service quarkus-greeter --url)`

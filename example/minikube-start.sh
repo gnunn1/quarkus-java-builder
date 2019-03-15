@@ -12,7 +12,6 @@ minikube start -p quarkus-app-demo \
   --memory=4096 \
   --cpus=2 \
   --kubernetes-version=v1.12.0 \
-  --vm-driver=hyperkit \
   --network-plugin=cni \
   --enable-default-cni \
   --container-runtime=cri-o \
