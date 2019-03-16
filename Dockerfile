@@ -35,6 +35,7 @@ ENV BUILDAH_SCRIPT /usr/local/bin/buildah.sh
 COPY entrypoint-run.sh /usr/local/bin/entrypoint-run.sh
 COPY settings.xml /usr/share/maven/ref
 COPY buildah.sh /usr/local/bin/buildah.sh
+COPY maven-buildah.sh /usr/local/bin/maven-buildah.sh
 
 WORKDIR /project
 
