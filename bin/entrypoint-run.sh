@@ -1,6 +1,8 @@
 #! /bin/bash
 
-set -o pipefail
+set -e
+
+export PATH=$PATH:$JAVA_HOME/bin
 
 # Copy files from /usr/share/maven/ref into ${MAVEN_CONFIG}
 # So the initial ~/.m2 is set with expected content.
@@ -70,9 +72,6 @@ function configure_mirrors() {
 }
 
 export -f copy_reference_file
-
-# make the buildah script executable
-chmod +x /usr/local/bin/buildah.sh
 
 copy_reference_files
 configure_proxy

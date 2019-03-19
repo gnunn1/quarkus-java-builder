@@ -30,12 +30,9 @@ ENV MAVEN_HOME /opt/maven
 ENV MAVEN_CONFIG "$USER_HOME_DIR/.m2"
 ENV GRAALVM_HOME /opt/graalvm
 ENV JAVA_HOME /opt/graalvm
-ENV BUILDAH_SCRIPT /usr/local/bin/buildah.sh
 
-COPY entrypoint-run.sh /usr/local/bin/entrypoint-run.sh
 COPY settings.xml /usr/share/maven/ref
-COPY buildah.sh /usr/local/bin/buildah.sh
-COPY maven-buildah.sh /usr/local/bin/maven-buildah.sh
+ADD ./bin/*.sh /usr/local/bin/
 
 WORKDIR /project
 
