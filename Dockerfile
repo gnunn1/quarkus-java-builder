@@ -6,7 +6,7 @@ ARG USER_HOME_DIR="/root"
 ARG SHA=fae9c12b570c3ba18116a4e26ea524b29f7279c17cbaadc3326ca72927368924d9131d11b9e851b8dc9162228b6fdea955446be41207a5cfc61283dd8a561d2f
 ARG MAVEN_BASE_URL=https://archive.apache.org/dist/maven/maven-3/${MAVEN_VERSION}/binaries
 ARG GRAAL_VM_BASE_URL=https://github.com/oracle/graal/releases/download/vm-${GRAAL_VM_VERSION}
-ARG INSTALL_PKGS="buildah findutils podman tar gzip gcc glibc-devel zlib-devel"
+ARG INSTALL_PKGS="buildah findutils podman bzip2-devel gcc-c++ libcurl-devel openssl-devel tar unzip bc which lsof gzip"
 
 USER root
 
