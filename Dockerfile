@@ -7,8 +7,6 @@ ARG SHA=fae9c12b570c3ba18116a4e26ea524b29f7279c17cbaadc3326ca72927368924d9131d11
 ARG MAVEN_BASE_URL=https://archive.apache.org/dist/maven/maven-3/${MAVEN_VERSION}/binaries
 ARG GRAAL_VM_BASE_URL=https://github.com/oracle/graal/releases/download/vm-${GRAAL_VM_VERSION}
 
-COPY ./graalvm-ce-${GRAAL_VM_VERSION}-linux-amd64.tar.gz /tmp/graalvm-ce-amd64.tar.gz
-
 ARG PKGS="gcc gcc-c++ findutils llvm openssl-devel zlib-devel podman buildah"
 
 USER root
@@ -23,7 +21,7 @@ RUN mkdir -p /usr/share/maven /usr/share/maven/ref \
     && tar -xzf /tmp/graalvm-ce-amd64.tar.gz -C /opt/graalvm --strip-components=1  \
     && rm -f /tmp/apache-maven.tar.gz  /tmp/graalvm-ce-amd64.tar.gz \
     && dnf -y update \
-    && dnf -y install $PKGS \
+    && dnf -y install --nodocs $PKGS \
     && dnf -y clean all \
     && mkdir -p /project
 
