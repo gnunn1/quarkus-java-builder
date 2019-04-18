@@ -1,3 +1,4 @@
 Dockerfile.1
 config/**
 scripts/**
+*.tar.gz
