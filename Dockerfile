@@ -32,7 +32,7 @@ ENV MAVEN_HOME /usr/share/maven
 ENV MAVEN_CONFIG "$USER_HOME_DIR/.m2"
 ENV GRAALVM_HOME /opt/graalvm
 ENV JAVA_HOME /opt/graalvm
-ENV WORK_DIR=/project
+ENV WORK_DIR /project
 
 COPY settings.xml /usr/share/maven/ref
 ADD ./bin/*.sh /usr/local/bin/
