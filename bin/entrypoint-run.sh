@@ -2,8 +2,6 @@
 
 set -e
 
-scl enable devtoolset-8 llvm-toolset-7 bash
-
 export PATH=$PATH:$JAVA_HOME/bin
 
 # Copy files from /usr/share/maven/ref into ${MAVEN_CONFIG}
