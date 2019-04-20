@@ -7,8 +7,8 @@ ARG SHA=fae9c12b570c3ba18116a4e26ea524b29f7279c17cbaadc3326ca72927368924d9131d11
 ARG MAVEN_BASE_URL=https://archive.apache.org/dist/maven/maven-3/${MAVEN_VERSION}/binaries
 ARG GRAAL_VM_BASE_URL=https://github.com/oracle/graal/releases/download/vm-${GRAAL_VM_VERSION}
 
-ARG PKGS="gcc gcc-c++ findutils openssl openssl-devel cryptsetup-libs glibc-devel zlib-devel"
-ARG STATIC_PKGS="glibc-static  zlib-static"
+ARG PKGS="gcc findutils openssl openssl-devel cryptsetup-libs glibc-devel zlib-devel"
+ARG STATIC_PKGS="glibc-static zlib-static"
 ARG CONTAINER_TOOL_PKGS="buildah podman"
 
 USER root
