@@ -8,7 +8,7 @@ The container builder image that can be used to build  https://quarkus.io[Quarku
 The image is baked in with the following tools:
 
  * https://maven.apache.org[Apache Maven 3.6.0]
- * http://www.graalvm.org[Graal VM 1.0.0-rc12]
+ * http://www.graalvm.org[Graal VM 1.0.0-rc15]
  * https://buildah.io[Buildah]
  * https://podman.io/Podman[Podman]
 

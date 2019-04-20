@@ -7,7 +7,9 @@ ARG SHA=fae9c12b570c3ba18116a4e26ea524b29f7279c17cbaadc3326ca72927368924d9131d11
 ARG MAVEN_BASE_URL=https://archive.apache.org/dist/maven/maven-3/${MAVEN_VERSION}/binaries
 ARG GRAAL_VM_BASE_URL=https://github.com/oracle/graal/releases/download/vm-${GRAAL_VM_VERSION}
 
-ARG PKGS="gcc gcc-c++ findutils llvm openssl-devel zlib-devel podman buildah"
+ARG PKGS="gcc gcc-c++ findutils openssl openssl-devel cryptsetup-libs glibc-devel zlib-devel"
+ARG STATIC_PKGS="glibc-static  zlib-static"
+ARG CONTAINER_TOOL_PKGS="buildah podman"
 
 USER root
 
@@ -22,6 +24,8 @@ RUN mkdir -p /usr/share/maven /usr/share/maven/ref \
     && rm -f /tmp/apache-maven.tar.gz  /tmp/graalvm-ce-amd64.tar.gz \
     && dnf -y update \
     && dnf -y install --nodocs $PKGS \
+    && dnf -y install --nodocs $STATIC_PKGS $CONTAINER_TOOL_PKGS \
+    && dnf -y install --nodocs $CONTAINER_TOOL_PKGS \
     && dnf -y clean all \
     && mkdir -p /project
 
@@ -32,7 +36,7 @@ ENV MAVEN_HOME /usr/share/maven
 ENV MAVEN_CONFIG "$USER_HOME_DIR/.m2"
 ENV GRAALVM_HOME /opt/graalvm
 ENV JAVA_HOME /opt/graalvm
-ENV WORK_DIR /project
+ENV WORK_DIR=/project
 
 COPY settings.xml /usr/share/maven/ref
 ADD ./bin/*.sh /usr/local/bin/
