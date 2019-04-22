@@ -5,7 +5,7 @@
 # MVN_CMD_ARGS - the maven command arguments e.g. clean install
 # build image will deployed e.g. quay.io/myrepo/app:1.0
 
-set -eu
+set -eux
 
 PUSH=${PUSH:-'true'}
 
@@ -16,7 +16,7 @@ ARTIFACT_NAME=$(mvn org.apache.maven.plugins:maven-help-plugin:3.1.1:evaluate -D
 ARTIFACT_NAME_PKG=$(mvn org.apache.maven.plugins:maven-help-plugin:3.1.1:evaluate -Dexpression=project.packaging -q -DforceStdout)
 
 # compute the app name with packaging
-APP_NAME="$ARTIFACT_NAME.$ARTIFACT_NAME_PKG"
+APP_NAME="$ARTIFACT_NAME-runner.$ARTIFACT_NAME_PKG"
 
 # build the java project 
 mvn ${MVN_CMD_ARGS:-clean install}
