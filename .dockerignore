@@ -2,4 +2,7 @@ example
 README.adoc
 LICENSE
 .vscode
-.git
+.git 
+.settings
+.project
+.classpath

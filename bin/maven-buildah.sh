@@ -5,7 +5,7 @@
 # MVN_CMD_ARGS - the maven command arguments e.g. clean install
 # build image will deployed e.g. quay.io/myrepo/app:1.0
 
-set -eu
+set -eux
 
 PUSH=${PUSH:-'true'}
 
@@ -15,8 +15,8 @@ cd $WORK_DIR
 ARTIFACT_NAME=$(mvn org.apache.maven.plugins:maven-help-plugin:3.1.1:evaluate -Dexpression=project.build.finalName -q -DforceStdout)
 ARTIFACT_NAME_PKG=$(mvn org.apache.maven.plugins:maven-help-plugin:3.1.1:evaluate -Dexpression=project.packaging -q -DforceStdout)
 
-# compute the app name with packaging
-APP_NAME="$ARTIFACT_NAME.$ARTIFACT_NAME_PKG"
+# compute the app name with packaging if not available in env
+APP_NAME=${APP_NAME:-"$ARTIFACT_NAME-runner.$ARTIFACT_NAME_PKG"}
 
 # build the java project 
 mvn ${MVN_CMD_ARGS:-clean install}
@@ -29,7 +29,10 @@ containerID=$(buildah from docker.io/fabric8/java-jboss-openjdk8-jdk:1.5.4)
 # mount the container root FS
 appFS=$(buildah mount $containerID)
 
-cp target/lib/* $appFS/deployments/lib/
+echo "Copying Application Libraries"
+
+cp -rv target/lib $appFS/deployments
+
 cp -v target/$APP_NAME  $appFS/deployments/$APP_NAME
 
 # Add environment variables
