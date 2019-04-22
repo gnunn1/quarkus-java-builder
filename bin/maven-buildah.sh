@@ -29,6 +29,8 @@ containerID=$(buildah from docker.io/fabric8/java-jboss-openjdk8-jdk:1.5.4)
 # mount the container root FS
 appFS=$(buildah mount $containerID)
 
+echo "Copying Application Libraries"
+
 cp -rv target/lib $appFS/deployments
 
 cp -v target/$APP_NAME  $appFS/deployments/$APP_NAME
