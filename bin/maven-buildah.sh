@@ -15,8 +15,8 @@ cd $WORK_DIR
 ARTIFACT_NAME=$(mvn org.apache.maven.plugins:maven-help-plugin:3.1.1:evaluate -Dexpression=project.build.finalName -q -DforceStdout)
 ARTIFACT_NAME_PKG=$(mvn org.apache.maven.plugins:maven-help-plugin:3.1.1:evaluate -Dexpression=project.packaging -q -DforceStdout)
 
-# compute the app name with packaging
-APP_NAME="$ARTIFACT_NAME-runner.$ARTIFACT_NAME_PKG"
+# compute the app name with packaging if not available in env
+APP_NAME=${APP_NAME:-"$ARTIFACT_NAME-runner.$ARTIFACT_NAME_PKG"}
 
 # build the java project 
 mvn ${MVN_CMD_ARGS:-clean install}
