@@ -29,8 +29,10 @@ containerID=$(buildah from docker.io/fabric8/java-jboss-openjdk8-jdk:1.5.4)
 # mount the container root FS
 appFS=$(buildah mount $containerID)
 
+mkdir -p $appFS/deployments/lib/
+
 cp target/lib/* $appFS/deployments/lib/
-cp -v target/$APP_NAME  $appFS/deployments/$APP_NAME
+cp target/$APP_NAME  $appFS/deployments/$APP_NAME
 
 # Add environment variables
 buildah config --env 'JAVA_APP_DIR=/deployments'  $containerID
