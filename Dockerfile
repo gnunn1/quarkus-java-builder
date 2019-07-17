@@ -1,4 +1,4 @@
-FROM fedora:29
+FROM registry.access.redhat.com/ubi8/ubi-minimal:latest
 
 ARG MAVEN_VERSION=3.6.1
 ARG GRAAL_VM_VERSION=19.0.2
@@ -21,6 +21,7 @@ RUN mkdir -p /usr/share/maven /usr/share/maven/ref \
     && mkdir -p /opt/graalvm  \
     && curl -fsSL -o /tmp/graalvm-ce-amd64.tar.gz ${GRAAL_VM_BASE_URL}/graalvm-ce-linux-amd64-${GRAAL_VM_VERSION}.tar.gz \
     && tar -xzf /tmp/graalvm-ce-amd64.tar.gz -C /opt/graalvm --strip-components=1  \
+    && /opt/graalvm/bin/gu install native-image \
     && rm -f /tmp/apache-maven.tar.gz  /tmp/graalvm-ce-amd64.tar.gz \
     && dnf -y update \
     && dnf -y install --nodocs $PKGS \
@@ -36,7 +37,8 @@ ENV MAVEN_HOME /usr/share/maven
 ENV MAVEN_CONFIG "$USER_HOME_DIR/.m2"
 ENV GRAALVM_HOME /opt/graalvm
 ENV JAVA_HOME /opt/graalvm
-ENV WORK_DIR=/project
+ENV WORK_DIR /project
+ENV PATH $PATH:$JAVA_HOME/bin
 
 COPY settings.xml /usr/share/maven/ref
 ADD ./bin/*.sh /usr/local/bin/
