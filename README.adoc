@@ -8,9 +8,7 @@ The container builder image that can be used to build  https://quarkus.io[Quarku
 The image is baked in with the following tools:
 
  * https://maven.apache.org[Apache Maven 3.6.0]
- * http://www.graalvm.org[Graal VM 1.0.0-rc15]
- * https://buildah.io[Buildah]
- * https://podman.io/Podman[Podman]
+ * http://www.graalvm.org[Graal VM 19.0.2]
 
 == Using the image 
 
@@ -25,9 +23,6 @@ Docker pull `docker pull quay.io/rhdevelopers/quarkus-java-builder`
 
 | Environment Variable | Use | Default
 
-| BUILDAH_SCRIPT
-| Builds the application container image using Quarkus native image
-| /usr/loca/bin/buildah.sh
 
 | WORK_DIR
 | The directory that contains sources to build
@@ -67,7 +62,7 @@ Docker pull `docker pull quay.io/rhdevelopers/quarkus-java-builder`
 
 |===
 
-The builder image has a default `buildah.sh` script that runs a https://buildah.io[buildah] build to package the https://quarkus.io[QuarkusIO] application. The users can override this script by mounting their own `buildah.sh` script by setting the environment variable `BUILDAH_SCRIPT`.
+The builder image has a default `maven-run.sh` script that runs a maven build to package the https://quarkus.io[QuarkusIO] application. .
 
 == Example Application 
 
