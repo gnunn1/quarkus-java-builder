@@ -24,7 +24,7 @@ mvn ${MVN_CMD_ARGS:-clean install}
 echo "Building container image with APP: $APP_NAME"
 
 # define the container base image
-containerID=$(buildah from docker.io/fabric8/java-jboss-openjdk8-jdk:1.5.4)
+containerID=$(buildah from docker.io/fabric8/java-jboss-openjdk8-jdk)
 
 # mount the container root FS
 appFS=$(buildah mount $containerID)
@@ -42,14 +42,11 @@ buildah config --user jboss  $containerID
 # Add entry  point for the application
 buildah config --entrypoint '["/deployments/run-java.sh"]'  $containerID
 
-buildah config --author "devx@redhat.com" --created-by "devx@redhat.com" --label Built-By=buildah $containerID
+buildah config --label Built-By=buildah $containerID
 
 IMAGEID=$(buildah commit $containerID $DESTINATION_NAME)
 
 echo "Succesfully committed $DESTINATION_NAME with image id $IMAGEID"
-
-# Push the image to regisry 
-echo "To push ? $PUSH"
 
 if [ "$PUSH" = "false" ];
 then

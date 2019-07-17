@@ -15,12 +15,13 @@ ARTIFACT_NAME=$(mvn org.apache.maven.plugins:maven-help-plugin:3.1.1:evaluate -D
 ARTIFACT_NAME_PKG=$(mvn org.apache.maven.plugins:maven-help-plugin:3.1.1:evaluate -Dexpression=project.packaging -q -DforceStdout)
 
 APP_NAME="$ARTIFACT_NAME-runner"
+APP_OPTS=${APP_OPTS:-"\-Dquarkus.http.host=0.0.0.0"}
 
 # build the java project 
 mvn ${MVN_CMD_ARGS:-clean -DskipTests install -Pnative}
 
 # define the container base image
-containerID=$(buildah from registry.fedoraproject.org/fedora-minimal)
+containerID=$(buildah from registry.access.redhat.com/ubi8/ubi-minimal)
 
 # mount the container root FS
 appFS=$(buildah mount $containerID)
@@ -34,16 +35,13 @@ chmod +x $appFS/deployment/application
 
 # Add entry  point for the application
 buildah config --entrypoint '["/deployment/application"]'  $containerID
-buildah config --cmd "\-Dquarkus.http.host=0.0.0.0" $containerID
+buildah config --cmd $APP_OPTS $containerID
 
-buildah config --author "devx@redhat.com" --created-by "devx@redhat.com" --label Built-By=buildah $containerID
+buildah config  --label Built-By=buildah $containerID
 
 IMAGEID=$(buildah commit $containerID $DESTINATION_NAME)
 
 echo "Succesfully committed $DESTINATION_NAME with image id $IMAGEID"
-
-# Push the image to regisry 
-echo "To push ? $PUSH"
 
 if [ "$PUSH" = "false" ];
 then
