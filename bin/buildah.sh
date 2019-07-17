@@ -8,6 +8,7 @@
 set -eu
 
 PUSH=${PUSH:-'true'}
+TLSVERIFY=${TLSVERIFY:-'true'}
 
 cd $WORK_DIR
 
@@ -49,5 +50,5 @@ then
   buildah push $IMAGEID oci:/var/lib/containers/storage:$DESTINATION_NAME
 else  
   echo "Pushing $DESTINATION_NAME to remote container repository"
-  buildah push --tls-verify=false $IMAGEID $DESTINATION_NAME
+  buildah push --tls-verify=$TLSVERIFY $IMAGEID $DESTINATION_NAME
 fi 
