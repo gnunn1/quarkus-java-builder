@@ -7,7 +7,7 @@ ARG SHA=b4880fb7a3d81edd190a029440cdf17f308621af68475a4fe976296e71ff4a4b546dd6d8
 ARG MAVEN_BASE_URL=https://archive.apache.org/dist/maven/maven-3/${MAVEN_VERSION}/binaries
 ARG GRAAL_VM_BASE_URL=https://github.com/oracle/graal/releases/download/vm-${GRAAL_VM_VERSION}
 
-ARG PKGS="tar zip gzip wget curl unzip gcc glibc-devel zlib-devel"
+ARG PKGS="tar zip gzip findutils wget curl unzip gcc glibc-devel zlib-devel"
 
 USER root
 
