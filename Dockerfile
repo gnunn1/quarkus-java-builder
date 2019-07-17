@@ -11,9 +11,8 @@ ARG PKGS="tar zip wget curl unzip gcc glibc-devel zlib-devel buildah"
 
 USER root
 
-RUN mkdir -p /usr/share/maven /usr/share/maven/ref \    
-    && dnf -y update \
-    && dnf -y install --nodocs $PKGS \
+RUN mkdir -p /usr/share/maven /usr/share/maven/ref \ 
+    && microdnf -y install --nodocs $PKGS \
     && curl -fsSL -o /tmp/apache-maven.tar.gz ${MAVEN_BASE_URL}/apache-maven-$MAVEN_VERSION-bin.tar.gz \
     && echo "${SHA}  /tmp/apache-maven.tar.gz" | sha512sum -c - \
     && tar -xzf /tmp/apache-maven.tar.gz -C /usr/share/maven --strip-components=1 \
@@ -23,7 +22,6 @@ RUN mkdir -p /usr/share/maven /usr/share/maven/ref \
     && tar -xzf /tmp/graalvm-ce-amd64.tar.gz -C /opt/graalvm --strip-components=1  \
     && /opt/graalvm/bin/gu --auto-yes install native-image \
     && rm -f /tmp/apache-maven.tar.gz  /tmp/graalvm-ce-amd64.tar.gz \
-    && dnf -y clean all \
     && mkdir -p /project
 
 ENV BUILDAH_ISOLATION chroot
