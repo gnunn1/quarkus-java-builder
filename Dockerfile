@@ -7,9 +7,7 @@ ARG SHA=b4880fb7a3d81edd190a029440cdf17f308621af68475a4fe976296e71ff4a4b546dd6d8
 ARG MAVEN_BASE_URL=https://archive.apache.org/dist/maven/maven-3/${MAVEN_VERSION}/binaries
 ARG GRAAL_VM_BASE_URL=https://github.com/oracle/graal/releases/download/vm-${GRAAL_VM_VERSION}
 
-ARG PKGS="gcc findutils openssl openssl-devel cryptsetup-libs glibc-devel zlib-devel"
-ARG STATIC_PKGS="glibc-static zlib-static"
-ARG CONTAINER_TOOL_PKGS="buildah podman"
+ARG PKGS="tar zip wget curl unzip gcc glibc-devel zlib-devel buildah"
 
 USER root
 
@@ -21,12 +19,10 @@ RUN mkdir -p /usr/share/maven /usr/share/maven/ref \
     && mkdir -p /opt/graalvm  \
     && curl -fsSL -o /tmp/graalvm-ce-amd64.tar.gz ${GRAAL_VM_BASE_URL}/graalvm-ce-linux-amd64-${GRAAL_VM_VERSION}.tar.gz \
     && tar -xzf /tmp/graalvm-ce-amd64.tar.gz -C /opt/graalvm --strip-components=1  \
-    && /opt/graalvm/bin/gu install native-image \
+    && /opt/graalvm/bin/gu --auto-yes install native-image \
     && rm -f /tmp/apache-maven.tar.gz  /tmp/graalvm-ce-amd64.tar.gz \
     && dnf -y update \
     && dnf -y install --nodocs $PKGS \
-    && dnf -y install --nodocs $STATIC_PKGS $CONTAINER_TOOL_PKGS \
-    && dnf -y install --nodocs $CONTAINER_TOOL_PKGS \
     && dnf -y clean all \
     && mkdir -p /project
 
