@@ -3,18 +3,18 @@
 
 image:https://quay.io/repository/rhdevelopers/quarkus-java-builder/status["Docker Repository on Quay", link="https://quay.io/repository/rhdevelopers/quarkus-java-builder"]
 
-The container builder image that can be used to build  https://quarkus.io[QuarkusIO] applications. 
+The container builder image that can be used to build  https://quarkus.io[QuarkusIO] applications.
 
 The image is baked in with the following tools:
 
  * https://maven.apache.org[Apache Maven 3.6.0]
- * http://www.graalvm.org[Graal VM 19.0.2]
+ * http://www.graalvm.org[Graal VM 19.2.1]
 
-== Using the image 
+== Using the image
 
 Docker pull `docker pull quay.io/rhdevelopers/quarkus-java-builder`
 
-== Configuration 
+== Configuration
 
 [#en-vars]
 [cols="2,3,1",options="header"]
@@ -26,51 +26,51 @@ Docker pull `docker pull quay.io/rhdevelopers/quarkus-java-builder`
 
 | WORK_DIR
 | The directory that contains sources to build
-| /project 
+| /project
 
 | MVN_CMD_ARGS
-| The maven goals that need to run 
-| mvn package -Pnative 
+| The maven goals that need to run
+| mvn package -Pnative
 
 | DESTINATION_NAME
 | The fully qualified container image name, where the built image will be pushed e.g. docker.io/myrepo/myapp
-| 
+|
 
 | MAVEN_MIRROR_URL
 | The maven mirror url, typically the repository manager URL to make builders faster
-| 
+|
 
 | HTTP_PROXY_HOST
 | The HTTP proxy host to use with Maven
-| 
+|
 
 | HTTP_PROXY_PORT
 | The HTTP proxy port to use with Maven
-| 
+|
 
 | HTTP_PROXY_USERNAME
 | The HTTP proxy port to use with Maven
-| 
+|
 
 | HTTP_PROXY_PASSWORD
 | The HTTP proxy password to use with Maven
-| 
+|
 
 | HTTP_PROXY_NONPROXYHOSTS
 | The HTTP hosts to which proxy does not apply
-| 
+|
 
 |===
 
 The builder image has a default `maven-run.sh` script that runs a maven build to package the https://quarkus.io[QuarkusIO] application. .
 
-== Example Application 
+== Example Application
 
 You can download the sample source code from https://github.com/redhat-developer-demos/knative-tutorial-greeter[knative-tutorial-greeter]
 
 [source,bash]
 ----
-git clone https://github.com/redhat-developer-demos/knative-tutorial-greeter 
+git clone https://github.com/redhat-developer-demos/knative-tutorial-greeter
 ----
 
 Lets call the cloned folder as **$PROJECT_HOME**
@@ -81,14 +81,14 @@ https://kubernetes.io/docs/setup/minikube/[Minikube] is single node Kubernetes c
 
 As of now we dont have a standard way to build and deploy Kubernetes applications from sources. For the sake of demoing this builder we will will use https://github.com/knative/build[Knative Build], the following command will start minikube locally and setup Knative build in it.
 
-==== Vanilla Kubernetes Deployment using Knative Build  
+==== Vanilla Kubernetes Deployment using Knative Build
 
 [source,bash]
 ----
 $PROJECT_HOME/example/minikube-start.sh
 ----
 
-==== Deploy Quarkus application 
+==== Deploy Quarkus application
 
 [source,bash]
 ----
@@ -111,10 +111,10 @@ mvn -Dcontainer.registry.url='https://index.docker.io' \#<1>
     clean package
 ----
 
-<1> The docker hub registry url 
+<1> The docker hub registry url
 <2> The docker hub user name
 <3> The docker hub user password
-<4> The Git source revision 
+<4> The Git source revision
 <5> The Git source repository url, this repo already has a quarkus app
 <6> The application container image name, maps to `DESTINATION_NAME` in <<en-vars>>
 <7> The context directory within the sources that will be built
@@ -122,14 +122,14 @@ mvn -Dcontainer.registry.url='https://index.docker.io' \#<1>
 
 [source,bash]
 ----
-# apply the resources 
+# apply the resources
 kubectl apply -f target/k8s #<1>
 ----
 
 <1> This will create the following kubernetes resources:
 
 - A Kubernetes Service Account called `build-bot` that holds container registry push secrets and get events from Knative Builds
-- build-watcher role and role binding 
+- build-watcher role and role binding
 - A maven pvc that can cache maven artifacts after first build, for subsequent faster builds
 - A Deployment and a Service that uses the built image
 
@@ -141,7 +141,7 @@ Watch the status of the application using and use CTRL + C when you want to term
 
 [source,bash]
 ----
-kubectl get pods -w 
+kubectl get pods -w
 ----
 ====
 
